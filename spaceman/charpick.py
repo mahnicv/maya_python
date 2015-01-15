@@ -12,30 +12,17 @@ class CharacterPicker():
         self.namespaces = []
         for name in nameSpaces:
             if cmds.objExists(name + ":M_ALL_CTRL"):
-                self.namespaces.append(name)
-                print self.namespaces   
+                self.namespaces.append(name)   
             else:
                 if cmds.objExists(name + ":pelvis"):
                     self.namespaces.append(name)
-            if cmds.objExists(name + ":poo"):
-                self.namespaces.append(name)    
+   
         #call on build UI method
-        print name
-        print name
         self.buildUI()
             
         
             
     def buildUI(self):
-        def pooUI():
-            #create buttons
-            self.widgets[name + "_pooButton"] = cmds.button(label="",w=40,h=40, bgc =[0.0,.593,1.0])
-            cmds.button(self.widgets[name + "_pooButton"], edit=True, c=partial(self.selectControls, [namespace + "poo"], [(self.widgets[name + "_pooButton"],[0.0,.593,1.0])] ))
-                
-            #place buttons
-            cmds.formLayout(self.widgets[name + "_formLayout"], edit = True, af = [(self.widgets[name + "_pooButton"], 'left', 175), (self.widgets[name + "_pooButton"], 'top', 100)])
-            
-            
         def spaceUI():    
             #create buttons
             imageBG=cmds.internalVar(upd=True) + "icons/space.png"
@@ -152,19 +139,6 @@ class CharacterPicker():
             if name == "spaceman_RIG":
                 spaceUI()
                 
-            if name == "rad":
-                spaceUI()
-            
-            if name == "BS":
-                spaceUI()
-            
-            if name == "poo":
-                spaceUI()
-
-            if name == "RIG_1":
-                spaceUI()
-            if name == "RIG_2":
-                spaceUI()
             cmds.tabLayout(self.widgets["tabLayout"], edit = True, tabLabel = ((self.widgets[name + "_formLayout"], name)))
             cmds.dockControl("characterPicker_dock",  label = "Character Pick", area ="left", allowedArea= "left", content=self.widgets["window"])
         
