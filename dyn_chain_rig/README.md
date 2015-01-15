@@ -1,1 +1,1 @@
-file for dunamic chain rig
+file for dynamic chain rig
