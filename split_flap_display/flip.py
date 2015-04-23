@@ -5,10 +5,7 @@ keyList = []
 nameSpace = []
 timeStep = 60
 hash = '#'
-backslash = '\\'
 anList = [' ','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7','8','9','0','!','@', hash,'$','%','^','&','*','(',')','-','_','=','+','/','?','~','<','>',':',';',',','.']
-
-
 
 #check for existing window - delete if one exists.
 if cmds.window("UI_flip", exists =True) :
@@ -26,7 +23,18 @@ cmds.separator( height=20, style='in' )
 cmds.button(l='Set Frames', w=210, h=25, c='btn_start()')
 cmds.showWindow(window)
 
+#creates list of namespaces for flipunits        
+def getnameSpace():
+    
+    nsInfo = cmds.namespaceInfo(lon=True)
+    for name in nsInfo:
+        if cmds.objExists(name + ':flip_ring_GEO'):
+            nameSpace.append(name)
+        print nameSpace
 
+#create list from in put textfield. (inList)
+#compare input list with animation list (anList)
+#generate list for keyframe sequence (keyList)
 def makekeyList():
     del inList[:]
     del keyList[:]
@@ -36,30 +44,18 @@ def makekeyList():
     for element in inList:
         if element in anList:
             keyList.append(anList.index(element))
-        
-def getnameSpace():
-    
-    nsInfo = cmds.namespaceInfo(lon=True)
-    for name in nsInfo:
-        if cmds.objExists(name + ':flip_ring_GEO'):
-            nameSpace.append(name)
-        print nameSpace
-        
-   
-    
+
+#creates starting keyframe (value =0) at current keyframe   
 def makekeyFrameS():
-    
     count=0
-    print count
     timeS = cmds.currentTime(query=True)
     
     for i in keyList:    
         fName = nameSpace[count]
         cmds.setKeyframe(fName+':flip_ring_GEO', attribute='flip', t=timeS, v=0)
         count = count +1
-        print count
 
-
+#creates keyframe from keyList
 def makekeyFrameE():
     count=0
     lCount = 0
@@ -74,7 +70,8 @@ def makekeyFrameE():
             lCount = lCount+1
             count = count +1
             timeE = cmds.currentTime(query=True) + (keyList[count]*3)
-                  
+            
+#holds key                  
 def makekeyFrameH():
     count=0
     timeH = cmds.currentTime(query=True) + (timeStep*3)
@@ -98,17 +95,14 @@ def makekeyFrameR():
             llCount = llCount+1
             count = count +1
             timeR = cmds.currentTime(query=True) + (timeStep*3) + (60-keyList[count])
-            print 'this is timeR:'
-            print timeR      
-    
-    
+   
+#resets current frame to     
 def setcurrentTime():
     fName = nameSpace[count]
     currTime = cmds.currentTime(query=True) + (timeStep*3) + (60 - min(keyList))   
     cmds.currentTime( currTime +1, edit=True )
     cmds.setKeyframe(fName+':flip_ring_GEO', attribute='flip', t=currTime+1, v=60)
     cmds.currentTime( currTime +2, edit=True )
-
 
 def btn_start():
     makekeyList()
@@ -119,5 +113,3 @@ def btn_start():
     setcurrentTime()  
 
 getnameSpace() 
-
-
