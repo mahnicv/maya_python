@@ -49,54 +49,46 @@ def makekeyList():
 
 #creates starting keyframe (value =0) at current keyframe   
 def makekeyFrameS():    
-    count=0
-    print count
     timeS = cmds.currentTime(query=True)
     
-    for i in keyList:    
+    for i in keyList:
+        count = keyList.index(i)    
         fName = nameSpace[count]
         cmds.setKeyframe(fName+':flip_ring_GEO', attribute='flip', t=timeS, v=0)
-        count = count +1
-        print count
+
 
 #creates keyframe from keyList
 def makekeyFrameE():
     count=0
-    lCount = 0
-    kCount = len(keyList) - 1
     timeE = cmds.currentTime(query=True) + (keyList[count]*3)
     
-    for i in keyList:    
+    for i in keyList:
+        count = keyList.index(i)     
         fName = nameSpace[count]
         cmds.setKeyframe(fName+':flip_ring_GEO', attribute='flip', t=timeE, v=keyList[count])
         
-        if lCount < kCount:
-            lCount = lCount+1
-            count = count +1
+        if (count) < len(keyList) - 1: 
             timeE = cmds.currentTime(query=True) + (keyList[count]*3)
 #holds key                  
 def makekeyFrameH():
     count=0
     timeH = cmds.currentTime(query=True) + (timeStep*3)
     
-    for i in keyList:    
+    for i in keyList:
+        count = keyList.index(i)    
         fName = nameSpace[count]
         cmds.setKeyframe(fName+':flip_ring_GEO', attribute='flip', t=timeH, v=keyList[count])
-        count = count +1
 
 def makekeyFrameR():
     count=0
-    llCount = 0
-    kkCount = len(keyList) - 1
     timeR = cmds.currentTime(query=True) + (timeStep*3) + (60-keyList[count])
     
-    for i in keyList:    
+    for i in keyList:
+        count = keyList.index(i)    
         fName = nameSpace[count]
         cmds.setKeyframe(fName+':flip_ring_GEO', attribute='flip', t=timeR, v=60)
         
-        if llCount < kkCount:
-            llCount = llCount+1
-            count = count +1
+        if (count) < len(keyList) - 1: 
             timeR = cmds.currentTime(query=True) + (timeStep*3) + (60-keyList[count])
 
     
@@ -118,5 +110,3 @@ def btn_start():
     setcurrentTime()  
 
 getnameSpace() 
-
-
