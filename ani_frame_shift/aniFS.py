@@ -11,6 +11,10 @@ class TestWindow():
         self.sel = []
         self.UD = []
         self.caList = []
+        self.raList = []
+        self.aniCsel = []
+        self.aniCTempList = []
+        self.aniCConList = []        
         
     def buildUI(self):
         ## delete UI window if one already exists
@@ -69,6 +73,7 @@ class Radio():
     ## checks for changes in radio buttons
     ## RTest - enables/disables fields for frame mode. 
     ## RATest - sets shift mode.
+    ## TimeS, TimeR, TimeA - enables/disables input fields
     def __init__(self):
         self.ccrEn = 0
         self.testFList=['S','R','A']
@@ -137,11 +142,28 @@ class Apply():
                                 if RT.testQMList[win.E] == True:
                                     cmds.keyframe(self.slQList[self.CA], edit=True,relative=RT.testQMList[win.E], timeChange=win.widgets[win.name[win.E]+'D'],time=(win.widgets[win.name[win.E]+'A'],win.widgets[win.name[win.E]+'B']))
                                 else:
-                                    cmds.cutKey(self.slQList[self.CA])
-                                    cmds.pasteKey(self.slQList[self.CA], t = (win.widgets[win.name[win.E]+'D'],win.widgets[win.name[win.E]+'D']))                                      
+                                    for test in win.aniCConList:
+                                        if test == self.slQList[self.CA]:
+                                            cmds.cutKey(self.slQList[self.CA])
+                                            cmds.pasteKey(self.slQList[self.CA], t = (win.widgets[win.name[win.E]+'D'],win.widgets[win.name[win.E]+'D']))   
+                                        else:
+                                            pass
                             if element in win.caList and (win.widgets[win.name[win.E]+'test'+RT.testFList[2]] == 3):
-                                cmds.cutKey(self.slQList[self.CA])
-                                cmds.pasteKey(self.slQList[self.CA], to = win.widgets[win.name[win.E]+'D'])
+                                for test in win.aniCConList:
+                                    if test == self.slQList[self.CA]:
+                                        if RT.testQMList[win.E] == True:
+                                            cmds.cutKey(self.slQList[self.CA])
+                                            print AB.slQList[self.CA]
+                                            cmds.pasteKey(self.slQList[self.CA], to = win.widgets[win.name[win.E]+'D'])
+                                            print win.widgets[win.name[win.E]+'D']
+                                        else:
+                                            if test == self.slQList[self.CA]:
+                                                cmds.cutKey(self.slQList[self.CA])
+                                                cmds.pasteKey(self.slQList[self.CA], t = (win.widgets[win.name[win.E]+'D'],win.widgets[win.name[win.E]+'D']))
+                                            else:
+                                                pass
+                                    else:
+                                        pass
                 else:
                     for element in win.axis:
                         win.e = win.axis.index(element)
@@ -151,19 +173,31 @@ class Apply():
                         win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()] = cmds.intField(win.widgets['shift' + win.name[win.E] + win.axis[win.e]], q=True, v=True)
                         if (win.widgets[win.name[win.E]+win.axis[win.e].upper()]) and (win.widgets[win.name[win.E]+'test'+RT.testFList[win.e]] == 1):
                             cmds.keyframe(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper(), edit=True, relative=RT.testQMList[win.E], timeChange=win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()],time=(win.widgets[win.name[win.E]+'A'],win.widgets[win.name[win.E]+'A']))
+
                         if (win.widgets[win.name[win.E]+win.axis[win.e].upper()]) and (win.widgets[win.name[win.E]+'test'+RT.testFList[win.e]] == 2):
                             if RT.testQMList[win.E] == True:
                                 cmds.keyframe(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper(), edit=True, relative=RT.testQMList[win.E], timeChange=win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()],time=(win.widgets[win.name[win.E]+'A'],win.widgets[win.name[win.E]+'B']))
                             else:
-                                cmds.cutKey(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper(), time=(win.widgets[win.name[win.E]+'A'],win.widgets[win.name[win.E]+'B']))
-                                cmds.pasteKey(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper(), t =(win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()],win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()]))                                
+                                for test in win.aniCConList:
+                                    if test == win.sel[i]+self.attr[win.E]+win.axis[win.e].upper():
+                                        cmds.cutKey(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper(), time=(win.widgets[win.name[win.E]+'A'],win.widgets[win.name[win.E]+'B']))
+                                        cmds.pasteKey(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper(), t =(win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()],win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()]))
+                                    else:
+                                        pass
                         if (win.widgets[win.name[win.E]+win.axis[win.e].upper()]) and (win.widgets[win.name[win.E]+'test'+RT.testFList[win.e]] == 3):
-                            if RT.testQMList[win.E] == True:
-                                cmds.cutKey(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper())
-                                cmds.pasteKey(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper(), to = win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()])
-                            else:
-                                cmds.cutKey(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper())
-                                cmds.pasteKey(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper(), t =(win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()],win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()]))    
+                                for test in win.aniCConList:
+                                    if test == win.sel[i]+self.attr[win.E]+win.axis[win.e].upper():
+                                        if RT.testQMList[win.E] == True:
+                                            cmds.cutKey(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper())
+                                            cmds.pasteKey(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper(), to = win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()])
+                                        else:
+                                            if test == win.sel[i]+self.attr[win.E]+win.axis[win.e].upper():
+                                                    cmds.cutKey(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper())
+                                                    cmds.pasteKey(win.sel[i]+self.attr[win.E]+win.axis[win.e].upper(), t =(win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()],win.widgets[win.name[win.E]+'C'+win.axis[win.e].upper()])) 
+                                            else:
+                                                pass
+                                    else:
+                                        pass   
 
                             
         
@@ -182,16 +216,25 @@ class ScriptJob():
     def caTest(self):
         cmds.textScrollList(win.caSL,e = True, ra=True)
         del win.sel[:]
+        del win.raList[:]
         del win.caList[:]
+        del win.aniCsel[:]
+        del win.aniCConList[:]
+        del win.aniCTempList[:]
         win.sel[:0]=cmds.ls(sl=True)
-        
+        win.aniCsel = cmds.ls(type = 'animCurve')
+   
         for element in win.sel:
             self.e=win.sel.index(element)
             self.UD = cmds.listAttr(win.sel[self.e], v=True, k=True, u=True, ud=True)
-            self.SD = cmds.listAttr(win.sel[self.e], v=True, k=True, u=True)
+            self.SD = cmds.listAttr(win.sel[self.e], v=True, k=True, u=True, ud=False)
+            for s in self.SD:
+                self.S=self.SD.index(s)
+                win.raList.append(win.sel[self.e]+'.'+self.SD[self.S])
             if self.SD[0] == 'visibility':
                 cmds.textScrollList(win.caSL, e=True, append = win.sel[self.e]+'.'+self.SD[0])
                 win.caList.append(win.sel[self.e]+'.'+self.SD[0])
+                win.raList.remove(win.sel[self.e]+'.'+self.SD[0])
             if self.UD == None:
                 pass  
             else:
@@ -199,8 +242,20 @@ class ScriptJob():
                     self.U=self.UD.index(u)
                     cmds.textScrollList(win.caSL, e=True, append = win.sel[self.e]+'.'+self.UD[self.U])
                     win.caList.append(win.sel[self.e]+'.'+self.UD[self.U])
+                    win.raList.remove(win.sel[self.e]+'.'+self.UD[self.U])
+        for i in win.aniCsel:
+            I=win.aniCsel.index(i)
+            win.aniCTempList.append(str(win.aniCsel[I]))
+        
+        self.charReplace = "_"
+        
+        for self.filename in win.aniCTempList:
+            if self.charReplace in self.filename:
+                self.newFilename = self.filename.replace(self.charReplace, ".")
+                win.aniCConList.append(unicode(self.newFilename))
+                win.aniCConList = list(set(win.aniCConList))
 
-                    
+                  
 def SJTest():
     SJ.caTest()
     
