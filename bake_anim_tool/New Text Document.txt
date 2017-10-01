@@ -1,0 +1,4 @@
+Tool for:
+	importing referenced rigs into scene
+	baking animation to joints
+	removing excess objects in scene
